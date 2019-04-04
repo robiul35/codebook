@@ -1,4 +1,5 @@
 <?php
+$active='Account';
 include 'header.php';
 ?>
    
@@ -60,8 +61,8 @@ include 'header.php';
                <a href="cart.php" class="btn navbar-btn btn-primary right"><!-- btn navbar-btn btn-primary Begin -->
                    
                    <i class="fa fa-shopping-cart"></i>
-                   
-                   <span>4 Items In Your Cart</span>
+
+                   <span><?php echo item() ?> Items In Your Cart</span>
                    
                </a><!-- btn navbar-btn btn-primary Finish -->
                
@@ -144,7 +145,7 @@ include 'header.php';
                            
                        </center><!-- center Finish -->
                        
-                       <form action="customer_login.php.php" method="post" enctype="multipart/form-data"><!-- form Begin -->
+                       <form action="customer_register.php" method="post" enctype="multipart/form-data"><!-- form Begin -->
                            
                            <div class="form-group"><!-- form-group Begin -->
                                
@@ -236,27 +237,66 @@ include 'header.php';
     include("footer.php");
     
     ?>
-<?php
+<<?php
 
+if(isset($_POST['register'])){
 
-if(isset($_POST['register']))
-{
-    $c_name=$_POST['c_name'];
-    $c_email=$_POST['c_email'];
-    $c_pass=md5($_POST['c_pass']);
-    $c_country=$_POST['c_country'];
-    $c_city=$_POST['c_city'];
-    $c_phone=$_POST['c_phone'];
-    $c_address=$_POST['c_address'];
-    $c_image=$_FILES['c_image']['name'];
-    
+    $c_name = $_POST['c_name'];
 
+    $c_email = $_POST['c_email'];
 
-    $insert_customer="INSERT INTO customer (customer_name,`customer_email`, `customer_pass`, `customer_country`, `customer_city`, `customer_phone`, `customer_address`,`customer_image`) 
-VALUES ('$c_name','$c_email','$c_pass','$c_country','$c_city','$c_phone','$c_address','$c_image')";
-    $run_customer=mysqli_query($con,$insert_customer);
-    echo"<script>alert('you have been Register Sucessfully')</script>";
+    $c_pass =md5($_POST['c_pass']);
+
+    $c_country = $_POST['c_country'];
+
+    $c_city = $_POST['c_city'];
+
+    $c_phone = $_POST['c_phone'];
+
+    $c_address = $_POST['c_address'];
+
+    $c_image = $_FILES['c_image']['name'];
+
+    $c_image_tmp = $_FILES['c_image']['tmp_name'];
+
+    $c_ip = getRealIpUser();
+
+    move_uploaded_file($c_image_tmp,"customer/customer_images/$c_image");
+
+    $insert_customer = "INSERT INTO `customer`(`customer_name`, `customer_email`, `customer_pass`, `customer_country`, `customer_city`, `customer_phone`, `customer_address`, `customer_image`, `customer_ip`) VALUES ('$c_name','$c_email','$c_pass','$c_country','$c_city','$c_phone','$c_address','$c_image','$c_ip')";
+
+    $run_customer = mysqli_query($con,$insert_customer);
+
+    $sel_cart = "select * from cart where ip_add='$c_ip'";
+
+    $run_cart = mysqli_query($con,$sel_cart);
+
+    $check_cart = mysqli_num_rows($run_cart);
+
+    if($check_cart>0){
+
+        /// If register have items in cart ///
+
+        $_SESSION['customer_email']=$c_email;
+
+        echo "<script>alert('You have been Registered Sucessfully')</script>";
+
+        echo "<script>window.open('checkout.php','_self')</script>";
+
+    }else{
+
+        /// If register without items in cart ///
+
+        $_SESSION['customer_email']=$c_email;
+
+        echo "<script>alert('You have been Registered Sucessfully')</script>";
+
+        echo "<script>window.open('index.php','_self')</script>";
+
+    }
+
 }
+
 ?>
     <script src="js/jquery-331.min.js"></script>
     <script src="js/bootstrap-337.min.js"></script>

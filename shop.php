@@ -65,7 +65,7 @@ include 'functions/catpro.php';
 
                 <i class="fa fa-shopping-cart"></i>
 
-                <span>4 Items In Your Cart</span>
+                <span><?php echo item() ?> Items In Your Cart</span>
 
             </a><!-- btn navbar-btn btn-primary Finish -->
 
@@ -234,6 +234,7 @@ include 'functions/catpro.php';
 
 
                 ?>
+            </div>
 
                 <center>
                     <ul class="pagination">

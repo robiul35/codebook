@@ -63,8 +63,8 @@ include 'header.php';
                <a href="cart.php" class="btn navbar-btn btn-primary right"><!-- btn navbar-btn btn-primary Begin -->
                    
                    <i class="fa fa-shopping-cart"></i>
-                   
-                   <span>4 Items In Your Cart</span>
+
+                   <span><?php echo item() ?> Items In Your Cart</span>
                    
                </a><!-- btn navbar-btn btn-primary Finish -->
                
